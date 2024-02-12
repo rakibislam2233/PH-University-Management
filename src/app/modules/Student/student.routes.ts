@@ -2,8 +2,6 @@ import express from  'express';
 import { studentController } from './student.controller';
 
 const routes = express.Router();
-//create user routes
-routes.post('/',studentController.createStudent);
 //get all students routes
 routes.get('', studentController.getAllStudent)
 //get single students routes

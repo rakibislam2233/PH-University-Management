@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose'
-import bcrypt from 'bcrypt'
 import {
   StudentModel,
   TGuardian,
@@ -7,7 +6,6 @@ import {
   TStudent,
   TUserName,
 } from './student.interface'
-import config from '../../config'
 const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
@@ -78,10 +76,10 @@ const localGuradianSchema = new Schema<TLocalGuardian>({
 const studentSchema = new Schema<TStudent, StudentModel>(
   {
     id: { type: String, required: [true, 'ID is required'], unique: true },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      maxlength: [20, 'Password can not be more than 20 characters'],
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User id is required'],
+      unique: true,
     },
     name: {
       type: userNameSchema,
@@ -130,14 +128,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Local guardian information is required'],
     },
     profileImg: { type: String },
-    isActive: {
-      type: String,
-      enum: {
-        values: ['active', 'blocked'],
-        message: '{VALUE} is not a valid status',
-      },
-      default: 'active',
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -149,30 +139,18 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     },
   },
 )
-// pre save middleware/ hook : will work on create()  save()
-studentSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(
-    this.password,
-    Number(config.bcrypt_salt_round),
-  )
-  next()
-})
-studentSchema.post('save', async function (doc, next) {
-  doc.password = ''
-  next()
-})
 //Query middleware/hook
 studentSchema.pre('find', async function (next) {
-  this.find({ isDeleted: { $ne: true } }).projection({ password: 0 });
+  this.find({ isDeleted: { $ne: true } }).projection({ password: 0 })
   next()
 })
 studentSchema.pre('findOne', async function (next) {
-  this.find({ isDeleted: { $ne: true } }).projection({ password: 0 });
+  this.find({ isDeleted: { $ne: true } }).projection({ password: 0 })
   next()
 })
 //aggregate middleware
-studentSchema.pre('aggregate', async function(next){
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+studentSchema.pre('aggregate', async function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
   next()
 })
 //creating a custom static method
