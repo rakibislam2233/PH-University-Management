@@ -8,24 +8,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const user_service_1 = require("./user.service");
-const createStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { password, student: studentData } = req.body;
-        const result = yield user_service_1.userService.createStudentIntoDB(password, studentData);
-        res.status(200).json({
-            success: true,
-            message: 'User created successfully',
-            data: result,
-        });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }
-    catch (error) {
-        next(error);
-    }
-});
+const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { password, student: studentData } = req.body;
+    const result = yield user_service_1.userService.createStudentIntoDB(password, studentData);
+    res.status(200).json({
+        success: true,
+        message: 'User created successfully',
+        data: result,
+    });
+}));
 exports.userController = {
     createStudent,
 };

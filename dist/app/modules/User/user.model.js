@@ -21,6 +21,7 @@ const userSchema = new mongoose_1.Schema({
     id: {
         type: String,
         required: true,
+        unique: true
     },
     password: { type: String, required: true },
     needPasswordChange: { type: Boolean, required: true, default: true },
