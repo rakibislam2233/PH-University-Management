@@ -50,6 +50,6 @@ academicSemiterModel.pre('save', async function (next) {
 })
 
 export const AcademicSemister = model<TAcademicSemister>(
-  'academicSemister',
+  'AcademicSemister',
   academicSemiterModel,
 )

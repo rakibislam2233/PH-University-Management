@@ -41,4 +41,4 @@ userSchema.post('save', async function (doc, next) {
   doc.password = ''
   next()
 })
-export const User = model<TUser>('user', userSchema)
+export const User = model<TUser>('User', userSchema)

@@ -53,4 +53,4 @@ userSchema.post('save', function (doc, next) {
         next();
     });
 });
-exports.User = (0, mongoose_1.model)('user', userSchema);
+exports.User = (0, mongoose_1.model)('User', userSchema);
