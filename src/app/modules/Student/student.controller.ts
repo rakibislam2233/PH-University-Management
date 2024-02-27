@@ -19,25 +19,27 @@ const getSingleStudent = catchAsync(async (req, res) => {
   })
 })
 
+const updateStudent = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const { student } = req.body;
+  const result = await studentService.updateStudentIntoDB(Number(id), student)
+  res.status(200).json({
+    success: true,
+    message: 'Student was successfully updated',
+    data: result,
+  })
+})
 const deleteStudent = catchAsync(async (req, res) => {
   const { id } = req.params
-  const result = await studentService.deleteStudentFromDB(Number(id))
-  if (result.modifiedCount > 0) {
-    const deleteUser = await studentService.getSingleStudentFromDB(Number(id))
-    res.status(200).json({
-      success: true,
-      message: 'Student deleted successfully',
-      data: deleteUser,
-    })
-  } else {
-    res.status(200).json({
-      success: false,
-      message: 'Student not deleted',
-    })
-  }
+  await studentService.deleteStudentFromDB(Number(id))
+  res.status(200).json({
+    success: true,
+    message: 'Student deleted successfully',
+  })
 })
 export const studentController = {
   getAllStudent,
   getSingleStudent,
   deleteStudent,
+  updateStudent,
 }

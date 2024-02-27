@@ -1,4 +1,6 @@
+import AppError from '../../middleware/AppError'
 import catchAsync from '../../utils/catchAsync'
+import { AcademicFaculty } from './academicFaculty.model'
 import { academicFacultyService } from './academicFaculty.service'
 const createAcademicFaculty = catchAsync(async (req, res) => {
   const result = await academicFacultyService.createAcademicFacultyIntoDB(
@@ -29,6 +31,10 @@ const getSingleAcademicFaculty = catchAsync(async (req, res) => {
 })
 const updateSingleAcademicFaculty = catchAsync(async (req, res) => {
   const { id } = req.params
+  const isFacultyExist = await AcademicFaculty.findById(id)
+  if (!isFacultyExist) {
+    throw new AppError(404, 'Academic Faculty dose not exist')
+  }
   const result = await academicFacultyService.updateSingleAcademicFacultyIntoDB(
     id,
     req.body,

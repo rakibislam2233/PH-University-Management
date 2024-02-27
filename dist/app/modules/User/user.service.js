@@ -13,29 +13,46 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
 const config_1 = __importDefault(require("../../config"));
 const academicSemister_model_1 = require("../AcademicSemister/academicSemister.model");
 const student_model_1 = require("../Student/student.model");
 const user_model_1 = require("./user.model");
 const user_utils_1 = require("./user.utils");
-const createStudentIntoDB = (password, studentData) => __awaiter(void 0, void 0, void 0, function* () {
+const AppError_1 = __importDefault(require("../../middleware/AppError"));
+const createStudentIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     const userData = {};
     userData.password = password || config_1.default.default_password;
     userData.role = 'student';
-    const admisstionSemister = yield academicSemister_model_1.AcademicSemister.findById(studentData.admissionSemister);
+    const admisstionSemister = yield academicSemister_model_1.AcademicSemister.findById(payload.admissionSemister);
     if (!admisstionSemister) {
         throw new Error('Admission semester not found');
     }
     userData.id = yield (0, user_utils_1.genaretedId)(admisstionSemister);
-    // Create user
-    const newUser = yield user_model_1.User.create(userData);
-    if (Object.keys(newUser).length) {
-        // Set student data
-        studentData.id = newUser.id;
-        studentData.user = newUser._id;
-        // Create student
-        const result = yield student_model_1.Student.create(studentData);
-        return result;
+    //create session
+    const session = yield mongoose_1.default.startSession();
+    try {
+        session.startTransaction();
+        // Create user
+        const newUser = yield user_model_1.User.create([userData], { session });
+        if (!newUser.length) {
+            throw new AppError_1.default(404, 'Failed to create user');
+        }
+        payload.id = (_a = newUser[0]) === null || _a === void 0 ? void 0 : _a.id;
+        payload.user = (_b = newUser[0]) === null || _b === void 0 ? void 0 : _b._id;
+        const newStudent = yield student_model_1.Student.create([payload], { session });
+        if (!newStudent.length) {
+            throw new AppError_1.default(404, 'Failed to create student');
+        }
+        yield session.commitTransaction();
+        yield session.endSession();
+        return newStudent;
+    }
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw new AppError_1.default(404, `${error}`);
     }
 });
 exports.userService = { createStudentIntoDB };

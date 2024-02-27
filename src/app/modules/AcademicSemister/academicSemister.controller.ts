@@ -1,4 +1,6 @@
+import AppError from '../../middleware/AppError'
 import catchAsync from '../../utils/catchAsync'
+import { AcademicSemister } from './academicSemister.model'
 import { academicSemisterService } from './academicSemister.service'
 const createAcademicSemister = catchAsync(async (req, res) => {
   const result = await academicSemisterService.createAcademicSemisterIntoDB(
@@ -30,6 +32,10 @@ const getSingleAcademicSemister = catchAsync(async (req, res) => {
 })
 const updateSingleAcademicSemister = catchAsync(async (req, res) => {
   const { id } = req.params
+  const isSemisterExist = await AcademicSemister.findById(id);
+  if (!isSemisterExist) {
+    throw new AppError(404, 'Academic semister not exist')
+  }
   const result =
     await academicSemisterService.updateSingleAcademicSemisterIntoDB(
       id,

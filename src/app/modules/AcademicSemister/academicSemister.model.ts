@@ -5,8 +5,9 @@ import {
   AcademicSemisterName,
   Months,
 } from './acedemicSemister.constant'
+import AppError from '../../middleware/AppError'
 
-const academicSemiterModel = new Schema<TAcademicSemister>(
+const academicSemiterSchema = new Schema<TAcademicSemister>(
   {
     name: {
       type: String,
@@ -38,18 +39,18 @@ const academicSemiterModel = new Schema<TAcademicSemister>(
 
 //document pre hook
 
-academicSemiterModel.pre('save', async function (next) {
+academicSemiterSchema.pre('save', async function (next) {
   const isSemisterExist = await AcademicSemister.findOne({
     year: this.year,
     name: this.name,
   })
   if (isSemisterExist) {
-    throw new Error('Semester already exists')
+    throw new AppError(404, 'Semester already exists')
   }
   next()
 })
 
 export const AcademicSemister = model<TAcademicSemister>(
   'AcademicSemister',
-  academicSemiterModel,
+  academicSemiterSchema,
 )

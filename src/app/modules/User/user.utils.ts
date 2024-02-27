@@ -16,7 +16,6 @@ export const findLastStudentId = async () => {
 
   return lastStudent?.id ? lastStudent.id : undefined
 }
-//2030010000
 export const genaretedId = async (payload: TAcademicSemister) => {
   let currentId: string | undefined = (0).toString() //by default 0000
   const lastStudentId = await findLastStudentId()
@@ -25,13 +24,13 @@ export const genaretedId = async (payload: TAcademicSemister) => {
   const currentStudentSemisterYear = payload.year
   const currentStudentSemisterCode = payload.code
   if (
-    lastStudentSemisterYear &&
-    lastStudentSemisterCode === currentStudentSemisterYear &&
-    currentStudentSemisterCode
+    lastStudentSemisterYear === currentStudentSemisterYear &&
+    lastStudentSemisterCode === currentStudentSemisterCode
   ) {
     currentId = lastStudentId?.substring(6)
   }
   let icrementId = (Number(currentId) + 1).toString().padStart(4, '0')
+
   icrementId = `${payload.year}${payload.code}${icrementId}`
   return icrementId
 }

@@ -20,7 +20,7 @@ const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     const result = yield user_service_1.userService.createStudentIntoDB(password, studentData);
     res.status(200).json({
         success: true,
-        message: 'User created successfully',
+        message: 'Student created successfully',
         data: result,
     });
 }));

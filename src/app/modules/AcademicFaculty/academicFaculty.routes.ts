@@ -5,22 +5,22 @@ import { academicFacultyValidation } from './academicFaculty.validation'
 
 const router = express.Router()
 router.post(
-  '/create-academic-faculty',
+  '/',
   validateRequest(
     academicFacultyValidation.createAcademicacademicFacultyValidationSchema,
   ),
   academicFacultyController.createAcademicFaculty,
 )
 router.get(
-  '/all-academic-faculty',
+  '/',
   academicFacultyController.getAllAcademicFaculty,
 )
 router.get(
-  '/single-academic-faculty/:id',
+  '/:id',
   academicFacultyController.getSingleAcademicFaculty,
 )
 router.patch(
-  '/single-academic-faculty-update/:id',
+  '/:id',
   validateRequest(
     academicFacultyValidation.updateAcademicFacultyValidationSchema,
   ),

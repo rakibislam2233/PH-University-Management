@@ -5,22 +5,16 @@ import { academicSemisterController } from './academicSemister.controller'
 
 const router = express.Router()
 router.post(
-  '/create-academic-semister',
+  '/',
   validateRequest(
     academicSemisterValidation.createAcademicSemisterValidationSchema,
   ),
   academicSemisterController.createAcademicSemister,
 )
-router.get(
-  '/all-academic-semister',
-  academicSemisterController.getAllAcademicSemister,
-)
-router.get(
-  '/single-academic-semister/:id',
-  academicSemisterController.getSingleAcademicSemister,
-)
+router.get('/', academicSemisterController.getAllAcademicSemister)
+router.get('/:id', academicSemisterController.getSingleAcademicSemister)
 router.patch(
-  '/single-academic-semister-update/:id',
+  '/:id',
   validateRequest(
     academicSemisterValidation.updateAcademicSemisterValidationSchema,
   ),
