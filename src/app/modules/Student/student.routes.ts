@@ -10,5 +10,6 @@ routes.get('', studentController.getAllStudent)
 routes.get('/:id', studentController.getSingleStudent)
 //delte students from db
 routes.put('/:id', studentController.deleteStudent);
-routes.patch('/:id', validateRequest(updateStudentValidationSchema) ,studentController.updateStudent)
+routes.patch('/:id', validateRequest(updateStudentValidationSchema) ,studentController.updateStudent);
+
 export const studentRoutes = routes;

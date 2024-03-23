@@ -5,9 +5,9 @@ import { academicDepertmentValidation } from './academicDepertment.validation'
 const router = express.Router()
 router.post(
   '/',
-  validateRequest(
-    academicDepertmentValidation.createAcademicDepertmentValidationSchema,
-  ),
+  // validateRequest(
+  //   academicDepertmentValidation.createAcademicDepertmentValidationSchema,
+  // ),
   academicDepertmentController.createAcademicDepertment,
 )
 router.get('/', academicDepertmentController.getAllAcademicDepertment)
